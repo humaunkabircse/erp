@@ -52,7 +52,7 @@ class GatePassMasterController extends Controller
             'gp_date' => 'required',
             'gp_type' => 'required',
             'item_id'=>'required',
-            'item_qty'=>'required',
+            'gate_pass_item_qty'=>'required',
             'item_price'=>'required',
         ]);
 
@@ -69,21 +69,21 @@ class GatePassMasterController extends Controller
         $gatePassMaster->entered_by=auth()->id();
         $gatePassMaster->date_entered=Carbon::now()->format('Y-m-d');
 
-        DB::transaction(function () use ($gatePassMaster, $request) { 
+        DB::transaction(function () use ($gatePassMaster, $request) {
             if($gatePassMaster->save()){
                 $count_item = count($request->item_id);
-                if($count_item>0){                       
+                if($count_item>0){
                     for ($i = 0; $i < $count_item; $i++) {
                     $gatePassDetails 				=   new GatePassDetails();
                     $gatePassDetails->gp_id         =   $gatePassMaster->id;
                     $gatePassDetails->item_id	    =   $request->item_id[$i];
-                    $gatePassDetails->item_qty      =   $request->item_qty[$i];
+                    $gatePassDetails->gate_pass_item_qty      =   $request->gate_pass_item_qty[$i];
                     $gatePassDetails->item_price    =   $request->item_price[$i];
-                    $gatePassDetails->save();   
-                    }   
+                    $gatePassDetails->save();
+                    }
                 }
             }
-            
+
         });
         return redirect()->route('gate.pass.index')->with('success', 'Created successfully!');
     }
@@ -109,7 +109,7 @@ class GatePassMasterController extends Controller
     {
         $terms = Terms::all();
         $customers = Customer::all();
-        $items = Items::all(); 
+        $items = Items::all();
        $getPassMaster = GatePassMaster::where('id',$id)->first();
        return view('pages.gate-pass.edit',compact('getPassMaster','customers','terms','items'));
     }
@@ -125,7 +125,7 @@ class GatePassMasterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'item_id'=>'required',
-            'item_qty'=>'required',
+            'gate_pass_item_qty'=>'required',
             'item_price'=>'required',
         ]);
 
@@ -143,26 +143,26 @@ class GatePassMasterController extends Controller
         //     $gatePassMaster->updated_by = auth()->id();
         //     $gatePassMaster->date_updated = Carbon::now()->format('Y-m-d');
         // }
-       
-        DB::table('gate_pass_details')->where('gp_id', '=', $id)->delete();    
 
-    
+        DB::table('gate_pass_details')->where('gp_id', '=', $id)->delete();
+
+
 
                 $count_item = count($request->item_id);
-                if($count_item>0){                       
+                if($count_item>0){
                     for ($i = 0; $i < $count_item; $i++) {
                     $gatePassDetails 				=   new GatePassDetails();
                     $gatePassDetails->gp_id         =   $gatePassMaster->id;
                     $gatePassDetails->item_id	    =   $request->item_id[$i];
-                    $gatePassDetails->item_qty      =   $request->item_qty[$i];
+                    $gatePassDetails->gate_pass_item_qty      =   $request->gate_pass_item_qty[$i];
                     $gatePassDetails->item_price    =   $request->item_price[$i];
                     $gatePassDetails->updated_at		=   Carbon::now()->format('Y-m-d');
-                    $gatePassDetails->save();   
-                    }   
+                    $gatePassDetails->save();
+                    }
                 }
-           
-            
-      
+
+
+
         return redirect()->route('gate.pass.index')->with('success', 'Created successfully!');
     }
  public function gpInfoUpdate(Request $request){

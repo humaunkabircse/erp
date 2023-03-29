@@ -17,7 +17,7 @@ class CreateGatePassDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('gp_id');
             $table->unsignedBigInteger('item_id');
-            $table->float('item_qty')->nullable()->default(0);
+            $table->float('gate_pass_item_qty')->nullable()->default(0);
             $table->float('item_price')->nullable()->default(0);
             $table->timestamps();
         });
