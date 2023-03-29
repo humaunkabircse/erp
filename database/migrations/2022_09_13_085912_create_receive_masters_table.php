@@ -16,7 +16,9 @@ class CreateReceiveMastersTable extends Migration
         Schema::create('receive_masters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('rec_type_id');
+            $table->foreign('rec_type_id')->references('id')->on('receive_masters');
             $table->unsignedBigInteger('vendor_id');
+            $table->foreign('vendor_id')->references('id')->on('receive_masters');
             $table->string('rec_invoice_number');
             $table->date('rec_date');
             $table->float('discount')->nullable()->default(0);

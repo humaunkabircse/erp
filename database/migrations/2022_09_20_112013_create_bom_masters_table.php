@@ -16,6 +16,7 @@ class CreateBomMastersTable extends Migration
         Schema::create('bom_masters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('prod_item_id');
+            $table->foreign('prod_item_id')->references('id')->on('bom_masters');
             $table->string('entered_by')->nullable();
             $table->date('date_entered')->nullable();
             $table->string('updated_by')->nullable();

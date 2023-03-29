@@ -16,6 +16,7 @@ class CreateInvoiceMastersTable extends Migration
         Schema::create('invoice_masters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cus_id');
+            $table->foreign('cus_id')->references('id')->on('invoice_masters');
             $table->string('invoice_number');
             $table->date('invoice_date');
             $table->date('invoice_due_date')->nullable();

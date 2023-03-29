@@ -312,84 +312,6 @@ public function collectionPrint(Request $request){
 //Collection Report
 
 
-//Stock Reports
-public function stockReport(Request $request)
-{
-    $stockDetails = DB::table('items')
-        ->join('receive_details', 'receive_details.item_id', 'items.id')
-        ->leftjoin('stock_adjustments', 'stock_adjustments.item_id', 'items.id')
-        ->leftjoin('production_masters', 'production_masters.prod_qty', 'items.id')
-        ->select('items.*', 'receive_details.*', 'stock_adjustments.stock_adjustment_addition_qty', 'production_masters.prod_qty')
-        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
-        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
-        ->get();
-
-    $current_date = Carbon::now();
-
-    // echo "<pre>";
-    // print_r($stockDetails);
-    // echo "</pre>";
-
-    return view('pages.reports.stock.stock-report',compact('stockDetails', 'current_date'));
-
-}
-
-// Stock Print
-    public function stockPrint(Request $request)
-    {
-        $stockDetails = DB::table('items')
-        ->join('receive_details', 'receive_details.item_id', 'items.id')
-        ->leftjoin('stock_adjustments', 'stock_adjustments.item_id', 'items.id')
-        ->leftjoin('production_masters', 'production_masters.prod_qty', 'items.id')
-        ->select('items.*', 'receive_details.*', 'stock_adjustments.stock_adjustment_addition_qty', 'production_masters.prod_qty')
-        ->get();
-
-        $current_date = Carbon::now();
-        return view('pages.reports.stock.stock-print', compact('current_date', 'stockDetails'));
-    }
-
-
-// public function stockReport(){
-//     $stockDetails = DB::table('items')
-//     ->leftJoin('rm_useds','rm_useds.rm_item_id','=','items.id')
-//     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
-//     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
-//     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
-//     ->select('items.id','items.item_name',DB::raw('SUM(rm_useds.total_rm_item_qty+receive_details.item_qty-gate_pass_details.gate_pass_item_qty.invoice_item_qty) As stock_qty'))
-//     ->groupBy('items.id')
-//     ->orderby('items.id','ASC')->get();
-//     dd($stockDetails);
-//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
-
-// }
-
-// public function stockReport1(Request $request){
-//     $stockDetails = DB::table('items')
-//     ->leftJoin('rm_useds','rm_useds.rm_item_id','=','items.id')
-//     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
-//     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
-//     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
-//     ->select('items.id','items.item_name','receive_details.item_qty','rm_useds.total_rm_item_qty','invoice_details.invoice_item_qty','gate_pass_details.gate_pass_item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.gate_pass_item_qty) As gp_item_qty'))
-//     ->groupBy('receive_details.item_id','invoice_details.item_id','gate_pass_details.item_id','rm_useds.rm_item_id')->orderby('items.id','ASC')->get();
-//     dd($stockDetails);
-//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
-// }
-
-// public function stockPrint(Request $request){
-//     $stockDetails = DB::table('items')
-//     ->select('items.id','items.item_name','receive_details.item_id','receive_details.item_qty','rm_useds.rm_item_id','rm_useds.total_rm_item_qty','invoice_details.item_id','invoice_details.invoice_item_qty','gate_pass_details.item_id','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.gate_pass_item_qty) As gp_item_qty'))
-//     ->leftjoin('rm_useds','rm_useds.rm_item_id','=','items.id')
-//     ->leftjoin('receive_details','receive_details.item_id','=','items.id')
-//     ->leftjoin('invoice_details','invoice_details.item_id','=','items.id')
-//     ->leftjoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
-
-//     ->where('receive_details',">",0)
-//     ->orderby('items.id','ASC')
-//     ->groupBy(['receive_details.item_id','invoice_details.item_id','gate_pass_details.item_id','rm_useds.rm_item_id'])->get();
-//     dd($stockDetails);
-//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
-// }
-//Stock Reports
 
 //Payment Report
 public function paymentReport(){
@@ -467,4 +389,115 @@ public function paymentPrint(Request $request){
 
 
 
+
+
+
+
+
+
+//Stock Reports
+public function stockReport(Request $request)
+{
+    $stockDetails = DB::table('items')
+        ->join('receive_details', 'receive_details.item_id', 'items.id')
+        ->leftjoin('stock_adjustments', 'stock_adjustments.item_id', 'items.id')
+        ->leftjoin('production_masters', 'production_masters.prod_qty', 'items.id')
+        // For Substraction
+        ->leftjoin('invoice_details', 'invoice_details.item_id', 'items.id')
+        // ->leftjoin('gate_pass_details', 'gate_pass_details.item_id', 'items.id')
+        // ->leftjoin('rm_useds', 'rm_useds.rm_item_id', 'items.id')
+        ->select('items.*', 'receive_details.*', 'stock_adjustments.stock_adjustment_addition_qty', 'production_masters.prod_qty',
+                'invoice_details.invoice_item_qty'
+                // , 'gate_pass_details.gate_pass_item_qty'
+                // , 'rm_useds.total_rm_item_qty', 'rm_useds.total_wastage_qty'
+                )
+
+        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
+        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
+        ->get();
+
+    $current_date = Carbon::now();
+
+
+
+    echo "<pre>";
+    print_r($stockDetails);
+    echo "</pre>";
+
+    return view('pages.reports.stock.stock-report',compact('stockDetails', 'current_date'));
+
 }
+
+// Stock Print
+    public function stockPrint(Request $request)
+    {
+        $stockDetails = DB::table('items')
+        ->join('receive_details', 'receive_details.item_id', 'items.id')
+        ->leftjoin('stock_adjustments', 'stock_adjustments.item_id', 'items.id')
+        ->leftjoin('production_masters', 'production_masters.prod_qty', 'items.id')
+        ->select('items.*', 'receive_details.*', 'stock_adjustments.stock_adjustment_addition_qty', 'production_masters.prod_qty')
+        ->get();
+
+        $current_date = Carbon::now();
+        return view('pages.reports.stock.stock-print', compact('current_date', 'stockDetails'));
+    }
+
+
+// public function stockReport(){
+//     $stockDetails = DB::table('items')
+//     ->leftJoin('rm_useds','rm_useds.rm_item_id','=','items.id')
+//     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
+//     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
+//     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
+//     ->select('items.id','items.item_name',DB::raw('SUM(rm_useds.total_rm_item_qty+receive_details.item_qty-gate_pass_details.gate_pass_item_qty.invoice_item_qty) As stock_qty'))
+//     ->groupBy('items.id')
+//     ->orderby('items.id','ASC')->get();
+//     dd($stockDetails);
+//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
+
+// }
+
+// public function stockReport1(Request $request){
+//     $stockDetails = DB::table('items')
+//     ->leftJoin('rm_useds','rm_useds.rm_item_id','=','items.id')
+//     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
+//     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
+//     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
+//     ->select('items.id','items.item_name','receive_details.item_qty','rm_useds.total_rm_item_qty','invoice_details.invoice_item_qty','gate_pass_details.gate_pass_item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.gate_pass_item_qty) As gp_item_qty'))
+//     ->groupBy('receive_details.item_id','invoice_details.item_id','gate_pass_details.item_id','rm_useds.rm_item_id')->orderby('items.id','ASC')->get();
+//     dd($stockDetails);
+//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
+// }
+
+// public function stockPrint(Request $request){
+//     $stockDetails = DB::table('items')
+//     ->select('items.id','items.item_name','receive_details.item_id','receive_details.item_qty','rm_useds.rm_item_id','rm_useds.total_rm_item_qty','invoice_details.item_id','invoice_details.invoice_item_qty','gate_pass_details.item_id','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.gate_pass_item_qty) As gp_item_qty'))
+//     ->leftjoin('rm_useds','rm_useds.rm_item_id','=','items.id')
+//     ->leftjoin('receive_details','receive_details.item_id','=','items.id')
+//     ->leftjoin('invoice_details','invoice_details.item_id','=','items.id')
+//     ->leftjoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
+
+//     ->where('receive_details',">",0)
+//     ->orderby('items.id','ASC')
+//     ->groupBy(['receive_details.item_id','invoice_details.item_id','gate_pass_details.item_id','rm_useds.rm_item_id'])->get();
+//     dd($stockDetails);
+//     return view('pages.reports.stock.stock-report',compact('stockDetails'));
+// }
+//Stock Reports
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+

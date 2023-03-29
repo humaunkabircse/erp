@@ -16,7 +16,9 @@ class CreateReceiveDetailsTable extends Migration
         Schema::create('receive_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('rec_master_id');
+            $table->foreign('rec_master_id')->references('id')->on('receive_details');
             $table->unsignedBigInteger('item_id');
+            $table->foreign('item_id')->references('id')->on('receive_details');
             $table->float('item_price')->nullable()->default(0);
             $table->float('item_qty')->nullable()->default(0);
             $table->timestamps();

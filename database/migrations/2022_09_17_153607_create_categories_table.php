@@ -19,6 +19,7 @@ class CreateCategoriesTable extends Migration
             $table->boolean('is_parent')->nullable()->default(true);
             $table->mediumText('item_cat_desc')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('categories');
             $table->timestamps();
         });
     }

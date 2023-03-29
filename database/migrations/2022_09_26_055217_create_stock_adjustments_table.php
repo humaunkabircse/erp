@@ -17,6 +17,7 @@ class CreateStockAdjustmentsTable extends Migration
             $table->id();
             $table->string('stock_adjustment_Number');
             $table->unsignedBigInteger('item_id');
+            $table->foreign('item_id')->references('id')->on('stock_adjustments');
             $table->date('stock_adjustment_date');
             $table->float('stock_adjustment_addition_qty');
             $table->float('stock_adjustment_subtraction_qty');

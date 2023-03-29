@@ -16,7 +16,9 @@ class CreateBomDetailsTable extends Migration
         Schema::create('bom_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bom_master_id');
+            $table->foreign('bom_master_id')->references('id')->on('bom_details');
             $table->unsignedBigInteger('used_item_id');
+            $table->foreign('used_item_id')->references('id')->on('bom_details');
             $table->integer('used_item_qty');
             $table->string('used_item_unit');
             $table->float('wastage_quantity');

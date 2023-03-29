@@ -17,6 +17,7 @@ class CreateRmUsedsTable extends Migration
             $table->id();
             $table->string('batch_number');
             $table->unsignedBigInteger('rm_item_id');
+            $table->foreign('rm_item_id')->references('id')->on('rm_useds');
             $table->integer('total_rm_item_qty');
             $table->integer('total_wastage_qty')->nullable();
             $table->float('rm_item_price');

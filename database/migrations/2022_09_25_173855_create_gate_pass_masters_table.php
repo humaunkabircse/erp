@@ -16,6 +16,7 @@ class CreateGatePassMastersTable extends Migration
         Schema::create('gate_pass_masters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cus_id');
+            $table->foreign('cus_id')->references('id')->on('gate_pass_masters');
             $table->string('gp_number');
             $table->date('gp_date');
             $table->string('gp_type');

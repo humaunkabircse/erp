@@ -17,6 +17,7 @@ class CreateCollectionAdjustmentsTable extends Migration
             $table->id();
             $table->string('collection_adjustment_number');
             $table->unsignedBigInteger('cus_id');
+            $table->foreign('cus_id')->references('id')->on('collection_adjustments');
             $table->date('collection_adjustment_date');
             $table->float('collection_adjustment_amount');
             $table->longText('collection_adjustment_purpose')->nullable();

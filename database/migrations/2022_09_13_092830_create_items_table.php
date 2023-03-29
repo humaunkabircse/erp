@@ -20,6 +20,7 @@ class CreateItemsTable extends Migration
             $table->float('item_price')->nullable()->default(0);
             $table->integer('cat_id')->nullable();
             $table->unsignedBigInteger('child_cat_id')->nullable();
+            $table->foreign('child_cat_id')->references('id')->on('items');
             $table->integer('item_vendor');
             $table->float('item_tax')->nullable();
             $table->integer('item_unit');

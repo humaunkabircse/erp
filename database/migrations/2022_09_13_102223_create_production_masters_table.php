@@ -19,6 +19,7 @@ class CreateProductionMastersTable extends Migration
             $table->date('production_date');
             $table->integer('item_id');
             $table->unsignedBigInteger('prod_qty');
+            $table->foreign('prod_qty')->references('id')->on('production_masters');
             $table->float('item_price');
             $table->string('entered_by')->nullable();
             $table->date('date_entered')->nullable();

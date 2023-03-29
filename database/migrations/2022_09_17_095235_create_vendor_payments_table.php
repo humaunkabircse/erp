@@ -16,6 +16,7 @@ class CreateVendorPaymentsTable extends Migration
         Schema::create('vendor_payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('vendor_id');
+            $table->foreign('vendor_id')->references('id')->on('vendor_payments');
             $table->string('pay_mode');
             $table->string('cheque_no');
             $table->date('cheque_date');

@@ -17,6 +17,7 @@ class CreateExpensesTable extends Migration
             $table->id();
             $table->string('expenses_name');
             $table->unsignedBigInteger('expenses_category');
+            $table->foreign('expenses_category')->references('id')->on('expenses');
             $table->date('expenses_date');
             $table->float('expenses_amount');
             $table->integer('cust_id')->nullable();
