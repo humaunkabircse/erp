@@ -53,7 +53,7 @@ class InvoiceMasterController extends Controller
             'cus_id'=> 'required',
             'invoice_date' => 'required',
             'item_id.*'=>'required',
-            'item_qty.*'=>'required|min:1',
+            'invoice_item_qty.*'=>'required|min:1',
             'item_price.*'=>'required',
         ]);
 
@@ -80,10 +80,10 @@ class InvoiceMasterController extends Controller
                     $invoiceDetails 				=   new InvoiceDetails();
                     $invoiceDetails->invoice_id     =   $invoiceMaster->id;
                     $invoiceDetails->item_id	    =   $request->item_id[$i];
-                    $invoiceDetails->item_qty       =   $request->item_qty[$i];
+                    $invoiceDetails->invoice_item_qty       =   $request->invoice_item_qty[$i];
                     $invoiceDetails->item_price     =   $request->item_price[$i];
                     $invoiceDetails->item_discount  =   $request->item_discount[$i];
-                    $invoiceDetails->item_total     =   $request->item_qty[$i]*$request->item_price[$i]-$request->item_discount[$i];
+                    $invoiceDetails->item_total     =   $request->invoice_item_qty[$i]*$request->item_price[$i]-$request->item_discount[$i];
                     $invoiceDetails->created_at		=   date('Y-m-d', strtotime($request->invoice_date));
                     $invoiceDetails->save();
                     }
