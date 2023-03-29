@@ -137,7 +137,7 @@ if(!empty($vendor_id)){
             $challanDetails = DB::table('invoice_masters')
             ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
             ->join('customers','invoice_masters.cus_id', '=','customers.id')
-            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.item_qty) as t_item_qty'))
+            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.invoice_item_qty) as t_item_qty'))
             ->whereBetween('invoice_masters.invoice_date',[$start_date,$end_date])
             ->where('invoice_masters.cus_id','=',$request->cus_id)
             ->groupBy('invoice_details.invoice_id')->get();
@@ -146,7 +146,7 @@ if(!empty($vendor_id)){
             $challanDetails = DB::table('invoice_masters')
             ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
             ->join('customers','invoice_masters.cus_id', '=','customers.id')
-            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.item_qty) as t_item_qty'))
+            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.invoice_item_qty) as t_item_qty'))
             ->whereBetween('invoice_masters.invoice_date',[$start_date,$end_date])
             ->groupBy('invoice_details.invoice_id')->get();
             return view('pages.reports.challan.challan-report',compact('customers','challanDetails','dateRange','start_date','end_date'));
@@ -166,7 +166,7 @@ if(!empty($vendor_id)){
             $challanDetails = DB::table('invoice_masters')
             ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
             ->join('customers','invoice_masters.cus_id', '=','customers.id')
-            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.item_qty) as t_item_qty'))
+            ->select('invoice_masters.*','invoice_details.*','customers.cus_company',DB::raw('SUM(invoice_details.item_total) as challan_total'),DB::raw('SUM(invoice_details.invoice_item_qty) as t_item_qty'))
             ->whereBetween('invoice_masters.invoice_date',[$start_date,$end_date])
             ->where('invoice_masters.cus_id','=',$request->cus_id)
             ->groupBy('invoice_details.invoice_id')->get();
@@ -179,7 +179,7 @@ if(!empty($vendor_id)){
                     'invoice_details.*',
                     'customers.cus_company',
                     DB::raw('SUM(invoice_details.item_total) as challan_total'),
-                    DB::raw('SUM(invoice_details.item_qty) as t_item_qty')
+                    DB::raw('SUM(invoice_details.invoice_item_qty) as t_item_qty')
                     )
             ->whereBetween('invoice_masters.invoice_date',[$start_date,$end_date])
             ->groupBy('invoice_details.invoice_id')->get();
@@ -342,8 +342,6 @@ public function stockReport(Request $request)
         ->leftjoin('stock_adjustments', 'stock_adjustments.item_id', 'items.id')
         ->leftjoin('production_masters', 'production_masters.prod_qty', 'items.id')
         ->select('items.*', 'receive_details.*', 'stock_adjustments.stock_adjustment_addition_qty', 'production_masters.prod_qty')
-        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
-        // ->select(DB::raw('item_qty + IFNULL(stock_adjustment_addition_qty, 0)'))
         ->get();
 
         $current_date = Carbon::now();
@@ -357,7 +355,7 @@ public function stockReport(Request $request)
 //     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
 //     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
 //     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
-//     ->select('items.id','items.item_name',DB::raw('SUM(rm_useds.total_rm_item_qty+receive_details.item_qty-gate_pass_details.item_qty-invoice_details.item_qty) As stock_qty'))
+//     ->select('items.id','items.item_name',DB::raw('SUM(rm_useds.total_rm_item_qty+receive_details.item_qty-gate_pass_details.item_qty-invoice_details.invoice_item_qty) As stock_qty'))
 //     ->groupBy('items.id')
 //     ->orderby('items.id','ASC')->get();
 //     dd($stockDetails);
@@ -371,7 +369,7 @@ public function stockReport(Request $request)
 //     ->leftJoin('receive_details','receive_details.item_id','=','items.id')
 //     ->leftJoin('invoice_details','invoice_details.item_id','=','items.id')
 //     ->leftJoin('gate_pass_details','gate_pass_details.item_id','=','items.id')
-//     ->select('items.id','items.item_name','receive_details.item_qty','rm_useds.total_rm_item_qty','invoice_details.item_qty','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.item_qty) As gp_item_qty'))
+//     ->select('items.id','items.item_name','receive_details.item_qty','rm_useds.total_rm_item_qty','invoice_details.invoice_item_qty','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.item_qty) As gp_item_qty'))
 //     ->groupBy('receive_details.item_id','invoice_details.item_id','gate_pass_details.item_id','rm_useds.rm_item_id')->orderby('items.id','ASC')->get();
 //     dd($stockDetails);
 //     return view('pages.reports.stock.stock-report',compact('stockDetails'));
@@ -379,7 +377,7 @@ public function stockReport(Request $request)
 
 // public function stockPrint(Request $request){
 //     $stockDetails = DB::table('items')
-//     ->select('items.id','items.item_name','receive_details.item_id','receive_details.item_qty','rm_useds.rm_item_id','rm_useds.total_rm_item_qty','invoice_details.item_id','invoice_details.item_qty','gate_pass_details.item_id','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.item_qty) As gp_item_qty'))
+//     ->select('items.id','items.item_name','receive_details.item_id','receive_details.item_qty','rm_useds.rm_item_id','rm_useds.total_rm_item_qty','invoice_details.item_id','invoice_details.invoice_item_qty','gate_pass_details.item_id','gate_pass_details.item_qty',DB::raw('SUM(receive_details.item_qty) As r_item_qty'),DB::raw('SUM(rm_useds.total_rm_item_qty) As p_item_qty'),DB::raw('SUM(invoice_details.invoice_item_qty) As inv_item_qty'),DB::raw('SUM(gate_pass_details.item_qty) As gp_item_qty'))
 //     ->leftjoin('rm_useds','rm_useds.rm_item_id','=','items.id')
 //     ->leftjoin('receive_details','receive_details.item_id','=','items.id')
 //     ->leftjoin('invoice_details','invoice_details.item_id','=','items.id')

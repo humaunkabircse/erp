@@ -105,7 +105,7 @@ class InvoiceMasterController extends Controller
         $invoiceData = DB::table('invoice_masters')
                         ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
                         ->join('items','invoice_details.item_id', '=','items.id')
-                        ->select('invoice_masters.*','invoice_details.item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
+                        ->select('invoice_masters.*','invoice_details.invoice_item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
                         ->where('invoice_masters.id', $id)
                         ->get();
                         // dd( $invoiceData);
@@ -151,10 +151,10 @@ class InvoiceMasterController extends Controller
                     $invoiceDetails 				=   new InvoiceDetails();
                     $invoiceDetails->invoice_id     =   $invoiceMaster->id;
                     $invoiceDetails->item_id	    =   $request->item_id[$i];
-                    $invoiceDetails->item_qty       =   $request->item_qty[$i];
+                    $invoiceDetails->invoice_item_qty       =   $request->invoice_item_qty[$i];
                     $invoiceDetails->item_discount  =   $request->item_discount[$i];
                     $invoiceDetails->item_price     =   $request->item_price[$i];
-                    $invoiceDetails->item_total     =   $request->item_qty[$i]*$request->item_price[$i]-$request->item_discount[$i];
+                    $invoiceDetails->item_total     =   $request->invoice_item_qty[$i]*$request->item_price[$i]-$request->item_discount[$i];
                     $invoiceDetails->updated_at		=   Carbon::now()->format('Y-m-d');
                     $invoiceDetails->save();
                     }
@@ -183,7 +183,7 @@ class InvoiceMasterController extends Controller
         $invoiceData = DB::table('invoice_masters')
                         ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
                         ->join('items','invoice_details.item_id', '=','items.id')
-                        ->select('invoice_masters.*','invoice_details.item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
+                        ->select('invoice_masters.*','invoice_details.invoice_item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
                         ->where('invoice_masters.id', $id)
                         ->get();
                         // dd( $invoiceData);
@@ -201,7 +201,7 @@ class InvoiceMasterController extends Controller
         $invoiceData = DB::table('invoice_masters')
                         ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
                         ->join('items','invoice_details.item_id', '=','items.id')
-                        ->select('invoice_masters.*','invoice_details.item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
+                        ->select('invoice_masters.*','invoice_details.invoice_item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
                         ->where('invoice_masters.id', $id)
                         ->get();
                         // dd( $invoiceData);
@@ -227,7 +227,7 @@ class InvoiceMasterController extends Controller
         $data['invoiceData'] = DB::table('invoice_masters')
         ->join('invoice_details','invoice_masters.id', '=','invoice_details.invoice_id')
         ->join('items','invoice_details.item_id', '=','items.id')
-        ->select('invoice_masters.*','invoice_details.item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
+        ->select('invoice_masters.*','invoice_details.invoice_item_qty','invoice_details.item_price','invoice_details.item_discount','items.item_name')
         ->where('invoice_masters.id', $id)
         ->get();
         // dd( $invoiceData);

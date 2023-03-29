@@ -18,7 +18,7 @@ class CreateInvoiceDetailsTable extends Migration
             $table->unsignedBigInteger('invoice_id');
             $table->unsignedBigInteger('item_id');
             $table->float('item_price')->nullable()->default(0);
-            $table->float('item_qty')->nullable()->default(0);
+            $table->float('invoice_item_qty')->nullable()->default(0);
             $table->float('item_discount',10,4)->nullable()->default(0);
             $table->timestamps();
         });
